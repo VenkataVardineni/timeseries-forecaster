@@ -31,7 +31,7 @@ In one terminal:
 python api/app.py
 ```
 
-The API will run on `http://localhost:5000`
+The API will run on `http://127.0.0.1:5001` (port 5000 is blocked by macOS AirPlay)
 
 ### 4. Start the Frontend
 

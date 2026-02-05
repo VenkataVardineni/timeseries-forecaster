@@ -253,6 +253,7 @@ A React-based web interface is available for interactive use:
    ```bash
    python api/app.py
    ```
+   Note: The API runs on port 5001 (port 5000 is blocked by macOS AirPlay Receiver)
 
 3. **Start the frontend** (in another terminal):
    ```bash

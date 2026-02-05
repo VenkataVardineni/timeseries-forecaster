@@ -21,9 +21,10 @@ if [ ! -d "frontend/node_modules" ]; then
 fi
 
 echo ""
-echo "Starting backend API on http://localhost:5000"
+echo "Starting backend API on http://127.0.0.1:5001"
 echo "Starting frontend on http://localhost:3000"
 echo ""
+echo "Note: Port 5000 is blocked by macOS AirPlay, using 5001 instead"
 echo "Press Ctrl+C to stop both services"
 echo ""
 
