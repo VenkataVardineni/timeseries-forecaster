@@ -274,9 +274,6 @@ The React-based web interface provides:
 
 See [README_FRONTEND.md](README_FRONTEND.md) for detailed frontend documentation.
 
-## License
-
-[Specify your license here]
 
 ## Acknowledgments
 
