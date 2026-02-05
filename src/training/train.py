@@ -16,6 +16,7 @@ from src.data.features import build_features, save_features
 from src.data.prepare import build_windows, normalize_train_test
 from src.data.splits import WalkForwardFold, make_walk_forward_folds
 from src.evaluation.metrics import per_horizon_metrics, pinball_loss, interval_coverage
+from src.evaluation.plots import generate_forecast_lab_report
 from src.models.arima import predict_fold_arima
 from src.models.seq2seq_attention import Seq2SeqAttention
 from src.training.callbacks import EarlyStopping, ModelCheckpoint
@@ -184,6 +185,12 @@ def train_arima(config_path: str) -> str:
 
     save_json({"folds": fold_metadata}, run_dir / "folds.json")
     save_json({"config": cfg}, run_dir / "config.json")
+
+    # Generate forecast lab report
+    predictions_df = pd.DataFrame(all_predictions)
+    generate_forecast_lab_report(
+        run_dir, predictions_df, metrics_combined, model_name="ARIMA"
+    )
 
     print(f"ARIMA training complete. Results saved to {run_dir}")
     print(f"Summary metrics:\n{metrics_summary.head(10)}")
@@ -437,6 +444,12 @@ def train_seq2seq(config_path: str) -> str:
 
     save_json({"folds": fold_metadata}, run_dir / "folds.json")
     save_json({"config": cfg}, run_dir / "config.json")
+
+    # Generate forecast lab report
+    predictions_df = pd.DataFrame(all_predictions)
+    generate_forecast_lab_report(
+        run_dir, predictions_df, metrics_combined, model_name="Seq2Seq-Attention"
+    )
 
     print(f"Seq2Seq training complete. Results saved to {run_dir}")
     print(f"Summary metrics:\n{metrics_summary.head(10)}")
