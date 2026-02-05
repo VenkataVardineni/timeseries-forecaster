@@ -1,6 +1,12 @@
 # TimeSeries Forecaster
 
-A production-style forecasting toolkit for **multi-horizon time-series forecasting** with uncertainty quantification, walk-forward validation, and comprehensive evaluation reports.
+A production-ready forecasting toolkit for **multi-horizon time-series forecasting** with uncertainty quantification, walk-forward validation, and comprehensive evaluation reports. Features both a command-line interface and a modern web-based user interface.
+
+## Quick Links
+
+- **[Setup Instructions](SETUP.md)** - Complete installation and setup guide
+- **[Application Guide](APPLICATION_GUIDE.md)** - Comprehensive feature documentation
+- **[Frontend Documentation](README_FRONTEND.md)** - Web interface details
 
 ## Features
 
@@ -48,90 +54,111 @@ Each training run generates a complete **Forecast Lab** report under `reports/<r
 - **Checkpoints** (`checkpoints/`): Saved model weights for Seq2Seq models
 - **Configuration** (`config.json`): Complete experiment configuration for reproducibility
 
+## Quick Start
+
+### Option 1: Web Interface (Recommended)
+
+1. **Setup** (one-time):
+   ```bash
+   # Install Python dependencies
+   pip install -r requirements.txt
+   pip install -r api/requirements.txt
+   
+   # Install frontend dependencies
+   cd frontend && npm install && cd ..
+   ```
+
+2. **Run:**
+   ```bash
+   ./start_web.sh
+   ```
+
+3. **Access:** Open `http://localhost:3000` in your browser
+
+See [SETUP.md](SETUP.md) for detailed setup instructions.
+
+### Option 2: Command Line
+
+```bash
+# Generate sample data
+python scripts/generate_sample_data.py
+
+# Train ARIMA model
+python -m src.training.train --config configs/exp_arima.yaml
+
+# Train Seq2Seq model
+python -m src.training.train --config configs/exp_seq2seq_attention.yaml
+```
+
 ## Installation
 
-### Prerequisites
+For complete setup instructions, see **[SETUP.md](SETUP.md)**.
+
+**Prerequisites:**
 - Python 3.10+
-- pip or conda
+- Node.js 18+ and npm
+- Git
 
-### Setup
-
-1. Clone the repository:
+**Quick Setup:**
 ```bash
-git clone <repository-url>
+git clone https://github.com/VenkataVardineni/timeseries-forecaster.git
 cd timeseries-forecaster
-```
-
-2. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. Install dependencies:
-```bash
 pip install -r requirements.txt
+pip install -r api/requirements.txt
+cd frontend && npm install && cd ..
 ```
-
-### Data Preparation
-
-Prepare your dataset as a CSV file in `data/raw/` with:
-- A **timestamp column** (e.g., `timestamp`) that pandas can parse
-- A **target column** (e.g., `y`) containing the time series values
-- Optional: Additional feature columns (will be used as covariates)
-
-Example CSV structure:
-```csv
-timestamp,y,feature1,feature2
-2020-01-01,100.5,10,20
-2020-01-02,102.3,11,21
-...
-```
-
-Update the `data` section in your config files (`configs/exp_*.yaml`) to point to your CSV and specify column names.
 
 ## Usage
 
-### Training Models
+### Web Interface
 
-Train models with walk-forward evaluation:
+1. **Upload Data:** Go to Upload page and upload your CSV file
+2. **Configure Training:** Select model type and adjust parameters
+3. **Monitor Training:** Watch real-time progress updates
+4. **View Results:** Explore metrics, charts, and forecast plots
 
-**ARIMA Baseline:**
+### Command Line Interface
+
+**Train ARIMA Model:**
 ```bash
 python -m src.training.train --config configs/exp_arima.yaml
 ```
 
-**Seq2Seq LSTM with Attention:**
+**Train Seq2Seq Model:**
 ```bash
 python -m src.training.train --config configs/exp_seq2seq_attention.yaml
 ```
 
-These commands will:
-1. Load and feature-engineer the dataset (calendar features, lags, rolling stats)
-2. Build supervised windows (context + horizon)
-3. Create walk-forward folds with leakage checks
-4. Train/evaluate the model on each fold
-5. Generate comprehensive Forecast Lab reports
-
-### Standalone Walk-Forward Evaluation
-
-You can also run walk-forward data preparation separately:
-
+**Walk-Forward Evaluation Only:**
 ```bash
 python -m src.evaluation.walk_forward --config configs/exp_arima.yaml
 ```
 
-This creates fold boundaries and performs leakage checks without training models.
+### Data Format
+
+Your CSV file should have:
+- **Timestamp column** (e.g., `timestamp`) - pandas-parsable dates
+- **Target column** (e.g., `y`) - time series values
+- **Optional:** Feature columns (covariates)
+
+Example:
+```csv
+timestamp,y,feature1,feature2
+2020-01-01,100.5,10,20
+2020-01-02,102.3,11,21
+```
 
 ### Configuration
 
-Edit `configs/exp_*.yaml` to customize:
-- **Data paths** and column names
-- **Feature engineering** (lags, rolling windows, calendar features)
-- **Window sizes** (context_length, horizon)
-- **Model hyperparameters** (ARIMA orders, LSTM hidden size, etc.)
-- **Training settings** (batch size, learning rate, early stopping)
-- **Walk-forward** (number of folds)
+Edit `configs/exp_*.yaml` files to customize:
+- Data paths and column names
+- Feature engineering options
+- Window sizes (context_length, horizon)
+- Model hyperparameters
+- Training settings
+- Walk-forward folds
+
+See [APPLICATION_GUIDE.md](APPLICATION_GUIDE.md) for detailed configuration options.
 
 ## Walk-Forward Validation: Methodology
 
