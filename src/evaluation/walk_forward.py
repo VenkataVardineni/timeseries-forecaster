@@ -65,6 +65,7 @@ def run_walk_forward(config_path: str) -> str:
         num_windows=num_windows,
         horizon=win_cfg["horizon"],
         n_folds=walk_cfg.get("n_folds", 5),
+        context_length=win_cfg["context_length"],
     )
 
     run_name = cfg.get("run", {}).get("name", "walk_forward")

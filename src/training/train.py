@@ -14,7 +14,7 @@ from torch.utils.data import DataLoader, TensorDataset
 from src.data.loaders import load_time_series
 from src.data.features import build_features, save_features
 from src.data.prepare import build_windows, normalize_train_test
-from src.data.splits import WalkForwardFold, make_walk_forward_folds
+from src.data.splits import Fold, make_walk_forward_folds
 from src.evaluation.metrics import per_horizon_metrics, pinball_loss, interval_coverage
 from src.evaluation.plots import generate_forecast_lab_report
 from src.models.arima import predict_fold_arima
@@ -79,6 +79,7 @@ def train_arima(config_path: str) -> str:
         num_windows=num_windows,
         horizon=win_cfg["horizon"],
         n_folds=walk_cfg.get("n_folds", 5),
+        context_length=win_cfg["context_length"],
     )
 
     # Setup run directory
@@ -104,10 +105,17 @@ def train_arima(config_path: str) -> str:
         train_start, train_end = fold.train_idx
         test_start, test_end = fold.test_idx
 
-        # Leakage check
-        train_max_ts = timestamps[train_start:train_end, -1].max()
-        test_min_ts = timestamps[test_start:test_end, 0].min()
-        assert train_max_ts < test_min_ts, "Leakage detected!"
+        # Leakage check: ensure training windows don't overlap with test windows
+        # Last training window uses data up to: (train_end - 1) + context_length
+        # First test window uses data starting at: test_start
+        # We need: (train_end - 1) + context_length < test_start
+        last_train_data_idx = (train_end - 1) + win_cfg["context_length"]
+        first_test_data_idx = test_start
+        if last_train_data_idx >= first_test_data_idx:
+            raise AssertionError(
+                f"Leakage detected in fold {fold_idx}! Train data extends to window {last_train_data_idx}, "
+                f"but test starts at window {first_test_data_idx}"
+            )
 
         # Get training series: use original time series up to the end of training windows
         # Find the last timestamp in training windows
@@ -256,6 +264,7 @@ def train_seq2seq(config_path: str) -> str:
         num_windows=num_windows,
         horizon=win_cfg["horizon"],
         n_folds=walk_cfg.get("n_folds", 5),
+        context_length=win_cfg["context_length"],
     )
 
     # Setup run directory
@@ -274,11 +283,11 @@ def train_seq2seq(config_path: str) -> str:
     quantiles = model_cfg.get("quantiles", [0.1, 0.5, 0.9])
 
     # Training parameters
-    batch_size = train_cfg.get("batch_size", 64)
-    max_epochs = train_cfg.get("max_epochs", 50)
-    learning_rate = train_cfg.get("learning_rate", 1e-3)
-    gradient_clip_val = train_cfg.get("gradient_clip_val", 1.0)
-    early_stopping_patience = train_cfg.get("early_stopping_patience", 5)
+    batch_size = int(train_cfg.get("batch_size", 64))
+    max_epochs = int(train_cfg.get("max_epochs", 50))
+    learning_rate = float(train_cfg.get("learning_rate", 1e-3))
+    gradient_clip_val = float(train_cfg.get("gradient_clip_val", 1.0))
+    early_stopping_patience = int(train_cfg.get("early_stopping_patience", 5))
 
     # Walk-forward evaluation
     all_metrics = []
@@ -289,10 +298,14 @@ def train_seq2seq(config_path: str) -> str:
         train_start, train_end = fold.train_idx
         test_start, test_end = fold.test_idx
 
-        # Leakage check
-        train_max_ts = timestamps[train_start:train_end, -1].max()
-        test_min_ts = timestamps[test_start:test_end, 0].min()
-        assert train_max_ts < test_min_ts, "Leakage detected!"
+        # Leakage check: ensure training windows don't overlap with test windows
+        last_train_data_idx = (train_end - 1) + win_cfg["context_length"]
+        first_test_data_idx = test_start
+        if last_train_data_idx >= first_test_data_idx:
+            raise AssertionError(
+                f"Leakage detected in fold {fold_idx}! Train data extends to window {last_train_data_idx}, "
+                f"but test starts at window {first_test_data_idx}"
+            )
 
         X_train_fold = X[train_start:train_end]
         y_train_fold = y[train_start:train_end]

@@ -46,12 +46,24 @@ def forecast_arima(
         y_p10: [horizon] 10th percentile
         y_p90: [horizon] 90th percentile
     """
-    forecast = model.forecast(steps=horizon, alpha=alpha)
-    conf_int = model.get_forecast(steps=horizon).conf_int(alpha=alpha)
+    forecast_result = model.get_forecast(steps=horizon)
+    forecast = forecast_result.predicted_mean
+    conf_int = forecast_result.conf_int(alpha=alpha)
 
-    y_mean = forecast.values
-    y_p10 = conf_int.iloc[:, 0].values
-    y_p90 = conf_int.iloc[:, 1].values
+    # Handle both pandas Series and numpy array
+    if hasattr(forecast, 'values'):
+        y_mean = forecast.values
+    else:
+        y_mean = np.array(forecast)
+    
+    # Handle both pandas DataFrame and numpy array for confidence intervals
+    if hasattr(conf_int, 'iloc'):
+        y_p10 = conf_int.iloc[:, 0].values
+        y_p90 = conf_int.iloc[:, 1].values
+    else:
+        conf_int = np.array(conf_int)
+        y_p10 = conf_int[:, 0]
+        y_p90 = conf_int[:, 1]
 
     return y_mean, y_p10, y_p90
 

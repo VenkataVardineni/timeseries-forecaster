@@ -211,13 +211,13 @@ def generate_forecast_lab_report(
 
         y_true = fold_preds["y_true"].values
         y_pred_p50 = fold_preds["y_pred_p50"].values
-        y_pred_p10 = fold_preds.get("y_pred_p10", None)
-        y_pred_p90 = fold_preds.get("y_pred_p90", None)
-
-        if y_pred_p10 is not None:
-            y_pred_p10 = y_pred_p10.values
-        if y_pred_p90 is not None:
-            y_pred_p90 = y_pred_p90.values
+        y_pred_p10 = None
+        y_pred_p90 = None
+        
+        if "y_pred_p10" in fold_preds.columns:
+            y_pred_p10 = fold_preds["y_pred_p10"].values
+        if "y_pred_p90" in fold_preds.columns:
+            y_pred_p90 = fold_preds["y_pred_p90"].values
 
         plot_forecast_vs_actual(
             y_true,
