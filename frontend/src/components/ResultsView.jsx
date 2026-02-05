@@ -20,10 +20,11 @@ function ResultsView() {
     enabled: !!selectedRun,
   })
 
-  const { data: metrics } = useQuery({
+  const { data: metrics, error: metricsError } = useQuery({
     queryKey: ['metrics', selectedRun],
     queryFn: () => api.getMetrics(selectedRun).then((res) => res.data.metrics),
     enabled: !!selectedRun,
+    retry: false,
   })
 
   useEffect(() => {
@@ -65,6 +66,13 @@ function ResultsView() {
 
       {runInfo && (
         <>
+          {metricsError && (
+            <div className="card">
+              <div className="error">
+                Metrics not available for this run. This may be an older run without metrics files.
+              </div>
+            </div>
+          )}
           {metrics && metrics.length > 0 && (
             <div className="card">
               <h2>📈 Metrics</h2>

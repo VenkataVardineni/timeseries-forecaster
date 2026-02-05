@@ -206,12 +206,25 @@ def get_metrics(run_id: str):
     if not run_dir.exists():
         return jsonify({"error": "Run not found"}), 404
 
-    metrics_file = run_dir / "metrics_summary.csv"
-    if not metrics_file.exists():
+    import pandas as pd
+    
+    # Try metrics_summary.csv first, then fallback to metrics_arima.csv or metrics_seq2seq.csv
+    metrics_file = None
+    for filename in ["metrics_summary.csv", "metrics_arima.csv", "metrics_seq2seq.csv"]:
+        candidate = run_dir / filename
+        if candidate.exists():
+            metrics_file = candidate
+            break
+    
+    if not metrics_file:
         return jsonify({"error": "Metrics file not found"}), 404
 
-    import pandas as pd
     df = pd.read_csv(metrics_file)
+    
+    # If it's the detailed metrics file, aggregate by horizon_step
+    if "fold" in df.columns:
+        df = df.groupby("horizon_step")[["mae", "rmse"]].mean().reset_index()
+    
     return jsonify({"metrics": df.to_dict("records")})
 
 
@@ -284,10 +297,21 @@ def list_results():
     runs = []
     for run_dir in REPORTS_DIR.iterdir():
         if run_dir.is_dir() and not run_dir.name.startswith("."):
-            runs.append({
-                "run_id": run_dir.name,
-                "created": run_dir.stat().st_mtime,
-            })
+            # Check if run has any metrics or predictions
+            has_metrics = any((run_dir / f).exists() for f in 
+                            ["metrics_summary.csv", "metrics_arima.csv", "metrics_seq2seq.csv"])
+            has_predictions = (run_dir / "predictions.csv").exists()
+            has_plots = any(run_dir.glob("*.png"))
+            
+            # Only include runs that have some results
+            if has_metrics or has_predictions or has_plots:
+                runs.append({
+                    "run_id": run_dir.name,
+                    "created": run_dir.stat().st_mtime,
+                    "has_metrics": has_metrics,
+                    "has_predictions": has_predictions,
+                    "has_plots": has_plots,
+                })
     # Sort by creation time, newest first
     runs.sort(key=lambda x: x["created"], reverse=True)
     return jsonify({"runs": runs})
