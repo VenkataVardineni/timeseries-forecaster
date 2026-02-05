@@ -1,0 +1,92 @@
+.upload-section {
+  margin-bottom: 2rem;
+}
+
+.file-input-wrapper {
+  margin-bottom: 1rem;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-label {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: #f0f0f0;
+  border: 2px dashed #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  width: 100%;
+}
+
+.file-label:hover {
+  background: #e8e8e8;
+  border-color: #667eea;
+}
+
+.file-info {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.files-list {
+  margin-top: 2rem;
+}
+
+.files-list h3 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.files-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.files-list th,
+.files-list td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.files-list th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #555;
+}
+
+.files-list tr:hover {
+  background: #f8f9fa;
+}
+
+.info-box {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #e3f2fd;
+  border-radius: 6px;
+  border-left: 4px solid #2196f3;
+}
+
+.info-box h4 {
+  margin-bottom: 0.75rem;
+  color: #1976d2;
+}
+
+.info-box ul {
+  margin-left: 1.5rem;
+  color: #555;
+}
+
+.info-box code {
+  background: #fff;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+

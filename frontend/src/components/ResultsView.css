@@ -1,0 +1,50 @@
+.runs-selector {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.runs-selector label {
+  font-weight: 500;
+}
+
+.runs-selector select {
+  flex: 1;
+  max-width: 400px;
+}
+
+.plots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.plot-item {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.plot-item h3 {
+  margin-bottom: 1rem;
+  color: #333;
+  font-size: 1rem;
+  text-transform: capitalize;
+}
+
+.plot-image {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.config-display {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+}
+

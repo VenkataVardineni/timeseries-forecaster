@@ -233,6 +233,45 @@ This is a portfolio project demonstrating production-style ML engineering practi
 - Reproducible experiments via configs
 - Containerized deployment
 
+## Web Interface
+
+A React-based web interface is available for interactive use:
+
+### Quick Start
+
+1. **Install dependencies:**
+   ```bash
+   # Backend API
+   pip install -r api/requirements.txt
+   
+   # Frontend
+   cd frontend
+   npm install
+   ```
+
+2. **Start the backend API** (in one terminal):
+   ```bash
+   python api/app.py
+   ```
+
+3. **Start the frontend** (in another terminal):
+   ```bash
+   cd frontend
+   npm run dev
+   ```
+
+4. **Open your browser** to `http://localhost:3000`
+
+See [README_FRONTEND.md](README_FRONTEND.md) for detailed frontend documentation.
+
+### Features
+
+- 📤 **Upload CSV files** via drag-and-drop
+- ⚙️ **Configure models** with a user-friendly form
+- 🔄 **Monitor training** with real-time status updates
+- 📊 **View results** with interactive charts and plots
+- 🖼️ **Visualize forecasts** with uncertainty bands
+
 ## License
 
 [Specify your license here]
@@ -244,5 +283,7 @@ Built with:
 - statsmodels for ARIMA
 - pandas/numpy for data processing
 - matplotlib/seaborn for visualization
+- React + Vite for the web interface
+- Flask for the API backend
 
 
