@@ -1,0 +1,42 @@
+run:
+  name: "seq2seq_attention_quantiles"
+
+data:
+  csv_path: "data/raw/example_daily.csv"
+  timestamp_col: "timestamp"
+  target_col: "y"
+  freq: "D"
+  train_ratio: 0.8
+
+features:
+  calendar: true
+  lags: [1, 7, 14]
+  rolling:
+    - window: 7
+      stats: ["mean", "std"]
+
+windows:
+  context_length: 60
+  horizon: 30
+
+model:
+  type: "seq2seq_attention"
+  hidden_size: 64
+  num_layers: 2
+  dropout: 0.1
+  quantiles: [0.1, 0.5, 0.9]
+
+training:
+  batch_size: 64
+  max_epochs: 50
+  learning_rate: 1e-3
+  gradient_clip_val: 1.0
+  early_stopping_patience: 5
+
+walk_forward:
+  n_folds: 5
+
+reports:
+  base_dir: "reports"
+
+

@@ -1,0 +1,14 @@
+numpy
+pandas
+pyarrow
+matplotlib
+seaborn
+PyYAML
+statsmodels
+scikit-learn
+torch
+torchvision
+torchaudio
+rich
+
+

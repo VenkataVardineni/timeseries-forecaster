@@ -1,0 +1,33 @@
+run:
+  name: "arima_baseline"
+
+data:
+  csv_path: "data/raw/example_daily.csv"
+  timestamp_col: "timestamp"
+  target_col: "y"
+  freq: "D"
+  train_ratio: 0.8
+
+features:
+  calendar: true
+  lags: [1, 7, 14]
+  rolling:
+    - window: 7
+      stats: ["mean", "std"]
+
+windows:
+  context_length: 60
+  horizon: 30
+
+model:
+  type: "arima"
+  order: [2, 1, 2]
+  seasonal_order: [0, 0, 0, 0]
+
+walk_forward:
+  n_folds: 5
+
+reports:
+  base_dir: "reports"
+
+
