@@ -260,45 +260,19 @@ This is a portfolio project demonstrating production-style ML engineering practi
 - Reproducible experiments via configs
 - Containerized deployment
 
-## Web Interface
+## Web Interface Features
 
-A React-based web interface is available for interactive use:
+The React-based web interface provides:
 
-### Quick Start
-
-1. **Install dependencies:**
-   ```bash
-   # Backend API
-   pip install -r api/requirements.txt
-   
-   # Frontend
-   cd frontend
-   npm install
-   ```
-
-2. **Start the backend API** (in one terminal):
-   ```bash
-   python api/app.py
-   ```
-   Note: The API runs on port 5001 (port 5000 is blocked by macOS AirPlay Receiver)
-
-3. **Start the frontend** (in another terminal):
-   ```bash
-   cd frontend
-   npm run dev
-   ```
-
-4. **Open your browser** to `http://localhost:3000`
+- 📤 **Data Upload:** Drag-and-drop CSV file upload with file management
+- ⚙️ **Model Configuration:** Intuitive forms for ARIMA and Seq2Seq models
+- 🔄 **Training Monitoring:** Real-time status updates and progress tracking
+- 📊 **Results Visualization:** Interactive charts, metrics tables, and forecast plots
+- 🖼️ **Forecast Plots:** Visual forecasts with uncertainty bands (p10-p90)
+- 📈 **Metrics Analysis:** Per-horizon error analysis and degradation plots
+- 🔍 **Run Comparison:** Browse and compare multiple training runs
 
 See [README_FRONTEND.md](README_FRONTEND.md) for detailed frontend documentation.
-
-### Features
-
-- 📤 **Upload CSV files** via drag-and-drop
-- ⚙️ **Configure models** with a user-friendly form
-- 🔄 **Monitor training** with real-time status updates
-- 📊 **View results** with interactive charts and plots
-- 🖼️ **Visualize forecasts** with uncertainty bands
 
 ## License
 
